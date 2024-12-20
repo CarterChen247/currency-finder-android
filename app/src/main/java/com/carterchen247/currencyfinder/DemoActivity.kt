@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.carterchen247.currencyfinder.ui.CurrencyListScreen
 import com.carterchen247.currencyfinder.ui.theme.CurrencyfinderTheme
 
 class DemoActivity : ComponentActivity() {
@@ -19,29 +20,8 @@ class DemoActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CurrencyfinderTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                CurrencyListScreen()
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CurrencyfinderTheme {
-        Greeting("Android")
     }
 }
