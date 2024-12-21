@@ -16,8 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,15 +25,17 @@ import com.carterchen247.currencyfinder.R
 import com.carterchen247.currencyfinder.ui.theme.CurrencyfinderTheme
 
 @Composable
-fun CurrencyListScreen() {
-    val userQuery = remember { mutableStateOf("") }
-
+fun CurrencyListScreen(
+    userInput: String,
+    onUserInputChange: (String) -> Unit,
+    onSearchCancel: () -> Unit,
+) {
     Scaffold(
         topBar = {
             SearchBar(
-                value = userQuery.value,
-                onValueChange = { userQuery.value = it },
-                onCloseClicked = { userQuery.value = "" }
+                userInput = userInput,
+                onUserInputChange = { onUserInputChange(it) },
+                onSearchCancel = { onSearchCancel() },
             )
         },
         modifier = Modifier.fillMaxSize()
@@ -49,9 +49,9 @@ fun CurrencyListScreen() {
 
 @Composable
 private fun SearchBar(
-    value: String,
-    onValueChange: (String) -> Unit,
-    onCloseClicked: () -> Unit,
+    userInput: String,
+    onUserInputChange: (String) -> Unit,
+    onSearchCancel: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -65,20 +65,20 @@ private fun SearchBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             TextField(
-                value = value,
-                onValueChange = onValueChange,
+                value = userInput,
+                onValueChange = onUserInputChange,
                 modifier = Modifier.weight(1f),
                 trailingIcon = {
                     IconButton(
                         modifier = Modifier.aspectRatio(1f),
-                        onClick = { onCloseClicked() },
+                        onClick = { onSearchCancel() },
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.img_close),
                             contentDescription = ""
                         )
                     }
-                },
+                }
             )
         }
     }
@@ -97,9 +97,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun SearchBarPreview() {
     CurrencyfinderTheme {
         SearchBar(
-            value = "123",
-            onValueChange = {},
-            onCloseClicked = {},
+            userInput = "123",
+            onUserInputChange = {},
+            onSearchCancel = {},
         )
     }
 }
@@ -108,6 +108,10 @@ fun SearchBarPreview() {
 @Composable
 fun CurrencyListScreenPreview() {
     CurrencyfinderTheme {
-        CurrencyListScreen()
+        CurrencyListScreen(
+            userInput = "123",
+            onUserInputChange = {},
+            onSearchCancel = {},
+        )
     }
 }
