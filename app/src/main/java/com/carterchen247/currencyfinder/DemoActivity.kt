@@ -29,6 +29,9 @@ class DemoActivity : ComponentActivity() {
                     onUserInputChange = { viewModel.onUserInputChange(it) },
                     onSearchCancel = { viewModel.onSearchCancel() },
                     currencyInfoList = currencyInfoList,
+                    onUserClick = { action ->
+                        viewModel.handleUserAction(action)
+                    },
                 )
             }
         }

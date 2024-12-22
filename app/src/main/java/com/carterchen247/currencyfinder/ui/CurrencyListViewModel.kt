@@ -2,6 +2,7 @@ package com.carterchen247.currencyfinder.ui
 
 import androidx.lifecycle.ViewModel
 import com.carterchen247.currencyfinder.ui.model.CurrencyInfo
+import com.carterchen247.currencyfinder.ui.model.UserAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,5 +30,9 @@ class CurrencyListViewModel @Inject constructor() : ViewModel() {
 
     fun onSearchCancel() {
         _userInput.value = ""
+    }
+
+    fun handleUserAction(action: UserAction) {
+        // TODO: Handle user action
     }
 }

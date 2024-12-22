@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.carterchen247.currencyfinder.R
 import com.carterchen247.currencyfinder.ui.model.CurrencyInfo
+import com.carterchen247.currencyfinder.ui.model.UserAction
 import com.carterchen247.currencyfinder.ui.theme.CurrencyfinderTheme
 
 @Composable
@@ -47,6 +48,7 @@ fun CurrencyListScreen(
     onUserInputChange: (String) -> Unit,
     onSearchCancel: () -> Unit,
     currencyInfoList: List<CurrencyInfo>,
+    onUserClick: (UserAction) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -66,11 +68,11 @@ fun CurrencyListScreen(
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    ActionButton("Clear") { /*TODO*/ }
-                    ActionButton("Insert") { /*TODO*/ }
-                    ActionButton("Crypto") { /*TODO*/ }
-                    ActionButton("Fiat") { /*TODO*/ }
-                    ActionButton("All") { /*TODO*/ }
+                    ActionButton("Clear") { onUserClick(UserAction.CLEAR_DATA) }
+                    ActionButton("Insert") { onUserClick(UserAction.INSERT_DATA) }
+                    ActionButton("Crypto") { onUserClick(UserAction.SEARCH_CURRENCY_CRYPTO) }
+                    ActionButton("Fiat") { onUserClick(UserAction.SEARCH_CURRENCY_FIAT) }
+                    ActionButton("All") { onUserClick(UserAction.SEARCH_CURRENCY_ALL) }
                 }
                 CurrencyListView(currencyInfoList)
             }
@@ -269,6 +271,7 @@ fun CurrencyListScreenPreview() {
                     fullCode = "CRO",
                 )
             ),
+            onUserClick = {},
         )
     }
 }
