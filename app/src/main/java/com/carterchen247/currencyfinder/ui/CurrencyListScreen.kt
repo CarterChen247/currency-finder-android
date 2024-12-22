@@ -72,17 +72,66 @@ fun CurrencyListScreen(
                     ActionButton("Fiat") { /*TODO*/ }
                     ActionButton("All") { /*TODO*/ }
                 }
-                LazyColumn {
-                    currencyInfoList.map { currencyInfo ->
-                        item {
-                            CurrencyItem(currencyInfo)
-                        }
-                    }
+                CurrencyListView(currencyInfoList)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CurrencyListView(currencyInfoList: List<CurrencyInfo>) {
+    if (currencyInfoList.isEmpty()) {
+        // Empty state
+        Surface {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(text = "No Results")
+            }
+        }
+    } else {
+        LazyColumn {
+            currencyInfoList.map { currencyInfo ->
+                item {
+                    CurrencyItem(currencyInfo)
                 }
             }
         }
     }
 }
+
+@Preview
+@Composable
+fun CurrencyListViewPreviewNormalState() {
+    CurrencyfinderTheme {
+        CurrencyListView(
+            currencyInfoList = listOf(
+                CurrencyInfo(
+                    simpleCode = "C",
+                    name = "Crypto.com Chain",
+                    fullCode = "CRO",
+                ),
+                CurrencyInfo(
+                    simpleCode = "C",
+                    name = "Crypto.com Chain",
+                    fullCode = "CRO",
+                )
+            )
+        )
+    }
+}
+
+@Preview(name = "CurrencyListView Empty State")
+@Composable
+fun CurrencyListViewPreviewEmptyState() {
+    CurrencyfinderTheme {
+        CurrencyListView(
+            currencyInfoList = listOf()
+        )
+    }
+}
+
 
 @Composable
 fun CurrencyItem(currencyInfo: CurrencyInfo) {
