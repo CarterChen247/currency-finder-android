@@ -23,10 +23,12 @@ class DemoActivity : ComponentActivity() {
         setContent {
             CurrencyfinderTheme {
                 val userInput by viewModel.userInput.collectAsState()
+                val currencyInfoList by viewModel.currencyInfoList.collectAsState()
                 CurrencyListScreen(
                     userInput = userInput,
                     onUserInputChange = { viewModel.onUserInputChange(it) },
                     onSearchCancel = { viewModel.onSearchCancel() },
+                    currencyInfoList = currencyInfoList,
                 )
             }
         }
