@@ -1,6 +1,9 @@
 package com.carterchen247.currencyfinder.ui
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
@@ -10,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -40,10 +45,35 @@ fun CurrencyListScreen(
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
-        Greeting(
-            name = "Android",
-            modifier = Modifier.padding(innerPadding)
-        )
+        Box(modifier = Modifier.padding(innerPadding)) {
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                ) {
+                    ActionButton("Clear") { /*TODO*/ }
+                    ActionButton("Insert") { /*TODO*/ }
+                    ActionButton("Crypto") { /*TODO*/ }
+                    ActionButton("Fiat") { /*TODO*/ }
+                    ActionButton("All") { /*TODO*/ }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun ActionButton(
+    label: String, onClick: () -> Unit
+) {
+    Button(
+        onClick = { onClick() },
+        contentPadding = PaddingValues(8.dp),
+        shape = RoundedCornerShape(8.dp),
+    ) {
+        Text(text = label)
     }
 }
 
