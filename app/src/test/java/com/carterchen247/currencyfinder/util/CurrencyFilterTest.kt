@@ -1,3 +1,5 @@
+@file:Suppress("NonAsciiCharacters")
+
 package com.carterchen247.currencyfinder.util
 
 import com.carterchen247.currencyfinder.model.SearchableCurrency
@@ -31,6 +33,35 @@ class CurrencyFilterTest {
             )
         )
         val result = currencyFilter.filter("foo")
+        assertEquals(0, result.size)
+    }
+
+    @Test
+    fun `match if The coin’s name contains a partial match with a ‘ ’ (space) prefixed to the search term`() {
+        val currencyFilter = CurrencyFilter(
+            listOf(
+                object : SearchableCurrency {
+                    override val name = "Ethereum Classic"
+                    override val symbol = ""
+                }
+            )
+        )
+        val result = currencyFilter.filter("Classic")
+        assertEquals(1, result.size)
+        assertEquals("Ethereum Classic", result[0].name)
+    }
+
+    @Test
+    fun `not match if The coin’s does not contains a partial match with a ‘ ’ (space) prefixed to the search term`() {
+        val currencyFilter = CurrencyFilter(
+            listOf(
+                object : SearchableCurrency {
+                    override val name = "Tronclassic"
+                    override val symbol = ""
+                }
+            )
+        )
+        val result = currencyFilter.filter("Classic")
         assertEquals(0, result.size)
     }
 }
