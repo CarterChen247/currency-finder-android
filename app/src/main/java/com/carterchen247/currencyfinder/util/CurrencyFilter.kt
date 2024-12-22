@@ -4,13 +4,15 @@ import com.carterchen247.currencyfinder.model.SearchableCurrency
 
 class CurrencyFilter(private val searchableCurrencyList: List<SearchableCurrency>) {
 
-    private val ruleStartWith by lazy { StartWithRule() }
-    private val rulePartialMatch by lazy { PartialMatchRule() }
+    private val matchingRules = listOf(
+        NameStartWithRule(),
+        NamePartialMatchRule(),
+        SymbolStartWithRule(),
+    )
 
     fun filter(input: String): List<SearchableCurrency> {
         return searchableCurrencyList.filter { searchableCurrency ->
-            ruleStartWith.isMatched(input, searchableCurrency)
-                    || rulePartialMatch.isMatched(input, searchableCurrency)
+            matchingRules.any { it.isMatched(input, searchableCurrency) }
         }
     }
 }
@@ -19,14 +21,20 @@ interface MatchingRule {
     fun isMatched(input: String, searchableCurrency: SearchableCurrency): Boolean
 }
 
-class StartWithRule : MatchingRule {
+class NameStartWithRule : MatchingRule {
     override fun isMatched(input: String, searchableCurrency: SearchableCurrency): Boolean {
         return searchableCurrency.name.startsWith(input, ignoreCase = true)
     }
 }
 
-class PartialMatchRule : MatchingRule {
+class NamePartialMatchRule : MatchingRule {
     override fun isMatched(input: String, searchableCurrency: SearchableCurrency): Boolean {
         return searchableCurrency.name.contains(" $input", ignoreCase = true)
+    }
+}
+
+class SymbolStartWithRule : MatchingRule {
+    override fun isMatched(input: String, searchableCurrency: SearchableCurrency): Boolean {
+        return searchableCurrency.symbol.startsWith(input, ignoreCase = true)
     }
 }

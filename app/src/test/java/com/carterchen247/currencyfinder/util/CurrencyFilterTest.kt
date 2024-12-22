@@ -64,4 +64,63 @@ class CurrencyFilterTest {
         val result = currencyFilter.filter("Classic")
         assertEquals(0, result.size)
     }
+
+    @Test
+    fun `match if query == ET and coin’s symbol == ETH`() {
+        val currencyFilter = CurrencyFilter(
+            listOf(
+                object : SearchableCurrency {
+                    override val name = ""
+                    override val symbol = "ETH"
+                }
+            )
+        )
+        val result = currencyFilter.filter("ET")
+        assertEquals(1, result.size)
+        assertEquals("ETH", result[0].symbol)
+    }
+
+    @Test
+    fun `match if query == ET and coin’s symbol == ETC`() {
+        val currencyFilter = CurrencyFilter(
+            listOf(
+                object : SearchableCurrency {
+                    override val name = ""
+                    override val symbol = "ETC"
+                }
+            )
+        )
+        val result = currencyFilter.filter("ET")
+        assertEquals(1, result.size)
+        assertEquals("ETC", result[0].symbol)
+    }
+
+    @Test
+    fun `match if query == ET and coin’s symbol == ETN`() {
+        val currencyFilter = CurrencyFilter(
+            listOf(
+                object : SearchableCurrency {
+                    override val name = ""
+                    override val symbol = "ETN"
+                }
+            )
+        )
+        val result = currencyFilter.filter("ET")
+        assertEquals(1, result.size)
+        assertEquals("ETN", result[0].symbol)
+    }
+
+    @Test
+    fun `not match if query == ET and coin’s symbol == BET`() {
+        val currencyFilter = CurrencyFilter(
+            listOf(
+                object : SearchableCurrency {
+                    override val name = ""
+                    override val symbol = "BET"
+                }
+            )
+        )
+        val result = currencyFilter.filter("ET")
+        assertEquals(0, result.size)
+    }
 }
