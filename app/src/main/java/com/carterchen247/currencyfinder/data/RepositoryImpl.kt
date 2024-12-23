@@ -8,6 +8,14 @@ class RepositoryImpl(
     private val localDataSource: LocalDataSource,
 ) : Repository {
 
+    override suspend fun loadData() {
+        localDataSource.loadData()
+    }
+
+    override suspend fun clearData() {
+        localDataSource.clearData()
+    }
+
     override suspend fun searchCurrency(
         input: String,
         currencyType: CurrencyType?

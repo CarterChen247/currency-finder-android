@@ -7,8 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.carterchen247.currencyfinder.model.CurrencyType
 import com.carterchen247.currencyfinder.ui.CurrencyListScreen
 import com.carterchen247.currencyfinder.ui.CurrencyListViewModel
+import com.carterchen247.currencyfinder.ui.model.FilterType
+import com.carterchen247.currencyfinder.ui.model.UserAction
 import com.carterchen247.currencyfinder.ui.theme.CurrencyfinderTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +33,27 @@ class DemoActivity : ComponentActivity() {
                     onSearchCancel = { viewModel.onSearchCancel() },
                     currencyInfoList = currencyInfoList,
                     onUserClick = { action ->
-                        viewModel.handleUserAction(action)
+                        when (action) {
+                            UserAction.CLEAR_DATA -> {
+                                viewModel.onUserClearData()
+                            }
+
+                            UserAction.INSERT_DATA -> {
+                                viewModel.onUserInsertData()
+                            }
+
+                            UserAction.SEARCH_CURRENCY_CRYPTO -> {
+                                viewModel.onFilterTypeChange(FilterType.CRYPTO)
+                            }
+
+                            UserAction.SEARCH_CURRENCY_FIAT -> {
+                                viewModel.onFilterTypeChange(FilterType.FIAT)
+                            }
+
+                            UserAction.SEARCH_CURRENCY_ALL -> {
+                                viewModel.onFilterTypeChange(FilterType.ALL)
+                            }
+                        }
                     },
                 )
             }
