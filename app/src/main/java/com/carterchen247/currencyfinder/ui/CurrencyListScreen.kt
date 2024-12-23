@@ -110,14 +110,14 @@ fun CurrencyListViewPreviewNormalState() {
         CurrencyListView(
             currencyInfoList = listOf(
                 CurrencyInfo(
-                    simpleCode = "C",
+                    avatarCode = "C",
                     name = "Crypto.com Chain",
-                    fullCode = "CRO",
+                    displayCode = "CRO",
                 ),
                 CurrencyInfo(
-                    simpleCode = "C",
+                    avatarCode = "C",
                     name = "Crypto.com Chain",
-                    fullCode = "CRO",
+                    displayCode = "CRO",
                 )
             )
         )
@@ -152,7 +152,7 @@ fun CurrencyItem(currencyInfo: CurrencyInfo) {
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = currencyInfo.simpleCode,
+                    text = currencyInfo.avatarCode,
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
@@ -161,7 +161,7 @@ fun CurrencyItem(currencyInfo: CurrencyInfo) {
                 modifier = Modifier.weight(1f),
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = currencyInfo.fullCode)
+            Text(text = currencyInfo.displayCode)
             Spacer(modifier = Modifier.width(8.dp))
             Image(
                 painter = painterResource(id = R.drawable.img_chevron_right),
@@ -178,9 +178,9 @@ fun CurrencyItemPreview() {
     CurrencyfinderTheme {
         CurrencyItem(
             currencyInfo = CurrencyInfo(
-                simpleCode = "C",
+                avatarCode = "C",
                 name = "Crypto.com Chain",
-                fullCode = "CRO",
+                displayCode = "CRO",
             )
         )
     }
@@ -266,9 +266,9 @@ fun CurrencyListScreenPreview() {
             onSearchCancel = {},
             currencyInfoList = listOf(
                 CurrencyInfo(
-                    simpleCode = "C",
+                    avatarCode = "C",
                     name = "Crypto.com Chain",
-                    fullCode = "CRO",
+                    displayCode = "CRO",
                 )
             ),
             onUserClick = {},
