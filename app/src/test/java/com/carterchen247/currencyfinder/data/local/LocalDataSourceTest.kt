@@ -82,33 +82,22 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun `query data which name start with 'Chain'`() = runBlocking {
+    fun `query data which name partial match 'Classic'`() = runBlocking {
         localDataSource.loadData()
-        val result = localDataSource.searchCurrency("Chain")
+        val result = localDataSource.searchCurrency("Classic")
         assertEquals(1, result.size)
-        assertTrue(result.all { currencyData -> currencyData.name != "Crypto.com Chain" })
         assertArrayEquals(
             result.map { currencyData -> currencyData.name }.toTypedArray(),
-            arrayOf("Chainlink")
+            arrayOf(
+                "Ethereum Classic",
+            )
         )
     }
 
     @Test
-    fun `query data which name partial match ' Chain'`() = runBlocking {
+    fun `query data which name partial match 'Coin'`() = runBlocking {
         localDataSource.loadData()
-        val result = localDataSource.searchCurrency(" Chain")
-        assertEquals(1, result.size)
-        assertTrue(result.all { currencyData -> currencyData.name != "Chainlink" })
-        assertArrayEquals(
-            result.map { currencyData -> currencyData.name }.toTypedArray(),
-            arrayOf("Crypto.com Chain")
-        )
-    }
-
-    @Test
-    fun `query data which name partial match ' Coin'`() = runBlocking {
-        localDataSource.loadData()
-        val result = localDataSource.searchCurrency(" Coin")
+        val result = localDataSource.searchCurrency("Coin")
         assertEquals(2, result.size)
         assertArrayEquals(
             result.map { currencyData -> currencyData.name }.toTypedArray(),
@@ -120,9 +109,9 @@ class LocalDataSourceTest {
     }
 
     @Test
-    fun `query data which name partial match ' Dollar'`() = runBlocking {
+    fun `query data which name partial match 'Dollar'`() = runBlocking {
         localDataSource.loadData()
-        val result = localDataSource.searchCurrency(" Dollar")
+        val result = localDataSource.searchCurrency("Dollar")
         assertEquals(4, result.size)
         assertArrayEquals(
             result.map { currencyData -> currencyData.name }.toTypedArray(),
@@ -131,6 +120,20 @@ class LocalDataSourceTest {
                 "Hong Kong Dollar",
                 "Australian Dollar",
                 "United States Dollar",
+            )
+        )
+    }
+
+    @Test
+    fun `query data which name match 'Chain'`() = runBlocking {
+        localDataSource.loadData()
+        val result = localDataSource.searchCurrency("Chain")
+        assertEquals(2, result.size)
+        assertArrayEquals(
+            result.map { currencyData -> currencyData.name }.toTypedArray(),
+            arrayOf(
+                "Chainlink",
+                "Crypto.com Chain",
             )
         )
     }
@@ -154,7 +157,7 @@ class LocalDataSourceTest {
     @Test
     fun `query data which symbol start with '$' and type == CRYPTO`() = runBlocking {
         localDataSource.loadData()
-        val result = localDataSource.searchCurrency("\$", CurrencyType.CRYPTO)
+        val result = localDataSource.searchCurrency("$", CurrencyType.CRYPTO)
         assertEquals(0, result.size)
     }
 
@@ -186,7 +189,30 @@ class LocalDataSourceTest {
     @Test
     fun `cannot query data with code field`() = runBlocking {
         localDataSource.loadData()
-        val result = localDataSource.searchCurrency("USD", CurrencyType.FIAT)
+        val result = localDataSource.searchCurrency("SGD", CurrencyType.FIAT)
+        assertEquals(0, result.size)
+    }
+
+    @Test
+    fun `query data with 'b'`() = runBlocking {
+        localDataSource.loadData()
+        val result = localDataSource.searchCurrency("b")
+        assertEquals(4, result.size)
+        assertArrayEquals(
+            result.map { currencyData -> currencyData.name }.toTypedArray(),
+            arrayOf(
+                "Bitcoin",
+                "Bitcoin Cash",
+                "Binance Coin",
+                "British Pound",
+            )
+        )
+    }
+
+    @Test
+    fun `query data with 'be'`() = runBlocking {
+        localDataSource.loadData()
+        val result = localDataSource.searchCurrency("be")
         assertEquals(0, result.size)
     }
 }
