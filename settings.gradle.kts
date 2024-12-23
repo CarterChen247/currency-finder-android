@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "currencyfinder"
-include ':app'
+include(":app")
