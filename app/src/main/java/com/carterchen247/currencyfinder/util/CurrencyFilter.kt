@@ -2,7 +2,7 @@ package com.carterchen247.currencyfinder.util
 
 import com.carterchen247.currencyfinder.model.SearchableCurrency
 
-class CurrencyFilter(private val searchableCurrencyList: List<SearchableCurrency>) {
+class CurrencyFilter {
 
     private val matchingRules = listOf(
         NameStartWithRule(),
@@ -10,7 +10,10 @@ class CurrencyFilter(private val searchableCurrencyList: List<SearchableCurrency
         SymbolStartWithRule(),
     )
 
-    fun filter(input: String): List<SearchableCurrency> {
+    fun filter(
+        input: String,
+        searchableCurrencyList: List<SearchableCurrency>
+    ): List<SearchableCurrency> {
         return searchableCurrencyList.filter { searchableCurrency ->
             matchingRules.any { it.isMatched(input, searchableCurrency) }
         }
