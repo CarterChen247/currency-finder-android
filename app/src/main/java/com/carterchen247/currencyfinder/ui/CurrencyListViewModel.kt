@@ -8,6 +8,7 @@ import com.carterchen247.currencyfinder.ui.model.FilterType
 import com.carterchen247.currencyfinder.ui.model.toCurrencyInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -30,25 +31,33 @@ class CurrencyListViewModel @Inject constructor(
 
     fun onUserInputChange(input: String) {
         _userInput.value = input
-        updateCurrencyListState()
+        updateSearchResult()
     }
 
     fun onSearchCancel() {
         _userInput.value = ""
-        updateCurrencyListState()
+        updateSearchResult()
     }
 
     fun onUserInsertData() {
         viewModelScope.launch {
-            repository.loadData()
-            updateCurrencyListState()
+            try {
+                repository.loadData()
+                updateSearchResult()
+            } catch (e: Exception) {
+                Timber.e(e, "load data failed.")
+            }
         }
     }
 
     fun onUserClearData() {
         searchJob?.cancel()
         viewModelScope.launch {
-            repository.clearData()
+            try {
+                repository.clearData()
+            } catch (e: Exception) {
+                Timber.e(e, "clear data failed.")
+            }
         }
         // reset currency info list
         _uiState.update {
@@ -61,24 +70,31 @@ class CurrencyListViewModel @Inject constructor(
 
     fun onFilterTypeChange(filterType: FilterType) {
         _uiState.update { it.copy(selectedFilterType = filterType) }
-        updateCurrencyListState()
+        updateSearchResult()
     }
 
-    private fun updateCurrencyListState() {
+    private fun updateSearchResult() {
         val searchStartTimestamp = System.currentTimeMillis()
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val currencyType = convertCurrencyType(_uiState.value.selectedFilterType)
-            val resultList = repository.searchCurrency(_userInput.value, currencyType)
-                .map { currencyData -> currencyData.toCurrencyInfo() }
+            try {
+                val currencyType = convertCurrencyType(_uiState.value.selectedFilterType)
+                val resultList = repository.searchCurrency(_userInput.value, currencyType)
+                    .map { currencyData -> currencyData.toCurrencyInfo() }
 
-            Timber.d("search start timestamp: $searchStartTimestamp")
-            _uiState.update {
-                it.copy(
-                    currencyInfoList = resultList,
-                    isLoading = false,
-                )
+                Timber.d("search start timestamp: $searchStartTimestamp")
+
+                _uiState.update {
+                    it.copy(
+                        currencyInfoList = resultList,
+                        isLoading = false,
+                    )
+                }
+            } catch (e: Exception) {
+                ensureActive()
+                Timber.e(e, "updateSearchResult failed.")
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
