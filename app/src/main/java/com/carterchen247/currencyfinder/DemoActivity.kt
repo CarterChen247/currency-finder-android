@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.carterchen247.currencyfinder.model.CurrencyType
 import com.carterchen247.currencyfinder.ui.CurrencyListScreen
 import com.carterchen247.currencyfinder.ui.CurrencyListViewModel
 import com.carterchen247.currencyfinder.ui.model.FilterType
@@ -25,13 +24,13 @@ class DemoActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CurrencyfinderTheme {
+                val uiState by viewModel.uiState.collectAsState()
                 val userInput by viewModel.userInput.collectAsState()
-                val currencyInfoList by viewModel.currencyInfoList.collectAsState()
                 CurrencyListScreen(
+                    uiState = uiState,
                     userInput = userInput,
                     onUserInputChange = { viewModel.onUserInputChange(it) },
                     onSearchCancel = { viewModel.onSearchCancel() },
-                    currencyInfoList = currencyInfoList,
                     onUserClick = { action ->
                         when (action) {
                             UserAction.CLEAR_DATA -> {

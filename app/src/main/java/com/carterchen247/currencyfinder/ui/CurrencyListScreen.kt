@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -39,15 +40,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.carterchen247.currencyfinder.R
 import com.carterchen247.currencyfinder.ui.model.CurrencyInfo
+import com.carterchen247.currencyfinder.ui.model.FilterType
 import com.carterchen247.currencyfinder.ui.model.UserAction
 import com.carterchen247.currencyfinder.ui.theme.CurrencyfinderTheme
 
 @Composable
 fun CurrencyListScreen(
+    uiState: CurrencyListUiState,
     userInput: String,
     onUserInputChange: (String) -> Unit,
     onSearchCancel: () -> Unit,
-    currencyInfoList: List<CurrencyInfo>,
     onUserClick: (UserAction) -> Unit,
 ) {
     Scaffold(
@@ -62,19 +64,37 @@ fun CurrencyListScreen(
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    ActionButton("Clear") { onUserClick(UserAction.CLEAR_DATA) }
-                    ActionButton("Insert") { onUserClick(UserAction.INSERT_DATA) }
-                    ActionButton("Crypto") { onUserClick(UserAction.SEARCH_CURRENCY_CRYPTO) }
-                    ActionButton("Fiat") { onUserClick(UserAction.SEARCH_CURRENCY_FIAT) }
-                    ActionButton("All") { onUserClick(UserAction.SEARCH_CURRENCY_ALL) }
+                ButtonRow(onUserClick, uiState.filterTypes, uiState.selectedFilterType)
+                CurrencyListView(uiState.currencyInfoList)
+            }
+        }
+    }
+}
+
+@Composable
+private fun ButtonRow(
+    onUserClick: (UserAction) -> Unit,
+    filterTypes: List<FilterType>,
+    selectedFilterType: FilterType,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ActionButton("Clear") { onUserClick(UserAction.CLEAR_DATA) }
+        ActionButton("Insert") { onUserClick(UserAction.INSERT_DATA) }
+
+        filterTypes.forEach { filterType ->
+            SearchFilter(filterType.label, selected = selectedFilterType == filterType) {
+                val userAction = when (filterType) {
+                    FilterType.ALL -> UserAction.SEARCH_CURRENCY_ALL
+                    FilterType.CRYPTO -> UserAction.SEARCH_CURRENCY_CRYPTO
+                    FilterType.FIAT -> UserAction.SEARCH_CURRENCY_FIAT
                 }
-                CurrencyListView(currencyInfoList)
+                onUserClick(userAction)
             }
         }
     }
@@ -192,11 +212,27 @@ private fun ActionButton(
 ) {
     Button(
         onClick = { onClick() },
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+        modifier = Modifier.height(40.dp),
         shape = RoundedCornerShape(8.dp),
     ) {
         Text(text = label)
     }
+}
+
+
+@Composable
+private fun SearchFilter(
+    label: String,
+    selected: Boolean = false,
+    onSelected: () -> Unit,
+) {
+    FilterChip(
+        modifier = Modifier.height(40.dp),
+        selected = selected,
+        label = { Text(text = label) },
+        onClick = { onSelected() },
+    )
 }
 
 @Composable
@@ -261,16 +297,23 @@ fun SearchBarPreview() {
 fun CurrencyListScreenPreview() {
     CurrencyfinderTheme {
         CurrencyListScreen(
+            uiState = CurrencyListUiState().copy(
+                currencyInfoList = listOf(
+                    CurrencyInfo(
+                        avatarCode = "C",
+                        name = "Crypto.com Chain",
+                        displayCode = "CRO",
+                    ),
+                    CurrencyInfo(
+                        avatarCode = "C",
+                        name = "Crypto.com Chain",
+                        displayCode = "CRO",
+                    )
+                )
+            ),
             userInput = "123",
             onUserInputChange = {},
             onSearchCancel = {},
-            currencyInfoList = listOf(
-                CurrencyInfo(
-                    avatarCode = "C",
-                    name = "Crypto.com Chain",
-                    displayCode = "CRO",
-                )
-            ),
             onUserClick = {},
         )
     }
