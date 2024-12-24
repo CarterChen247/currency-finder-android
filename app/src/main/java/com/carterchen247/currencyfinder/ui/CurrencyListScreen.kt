@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -63,7 +64,10 @@ fun CurrencyListScreen(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
-            Column {
+            Column(
+                // make sure the content is not covered by the keyboard
+                modifier = Modifier.imePadding()
+            ) {
                 ButtonRow(onUserClick, uiState.filterTypes, uiState.selectedFilterType)
                 CurrencyListView(uiState.currencyInfoList)
             }
