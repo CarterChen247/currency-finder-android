@@ -7,10 +7,12 @@ import com.carterchen247.currencyfinder.model.CurrencyType
 import com.carterchen247.currencyfinder.ui.model.FilterType
 import com.carterchen247.currencyfinder.ui.model.toCurrencyInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +25,8 @@ class CurrencyListViewModel @Inject constructor(
 
     private val _userInput = MutableStateFlow("")
     val userInput = _userInput.asStateFlow()
+
+    private var searchJob: Job? = null
 
     fun onUserInputChange(input: String) {
         _userInput.value = input
@@ -45,6 +49,7 @@ class CurrencyListViewModel @Inject constructor(
         viewModelScope.launch {
             repository.clearData()
         }
+        // reset currency info list
         _uiState.update { it.copy(currencyInfoList = emptyList()) }
     }
 
@@ -54,10 +59,14 @@ class CurrencyListViewModel @Inject constructor(
     }
 
     private fun updateCurrencyListState() {
-        viewModelScope.launch {
+        val searchStartTimestamp = System.currentTimeMillis()
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             val currencyType = convertCurrencyType(_uiState.value.selectedFilterType)
             val resultList = repository.searchCurrency(_userInput.value, currencyType)
                 .map { currencyData -> currencyData.toCurrencyInfo() }
+
+            Timber.d("search start timestamp: $searchStartTimestamp")
             _uiState.update { it.copy(currencyInfoList = resultList) }
         }
     }
