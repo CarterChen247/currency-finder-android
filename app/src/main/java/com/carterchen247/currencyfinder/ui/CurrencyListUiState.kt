@@ -11,4 +11,5 @@ data class CurrencyListUiState(
         FilterType.CRYPTO,
         FilterType.FIAT,
     ),
+    val isLoading: Boolean = false,
 )

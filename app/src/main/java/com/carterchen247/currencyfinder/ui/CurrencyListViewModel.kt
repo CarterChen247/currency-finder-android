@@ -46,11 +46,17 @@ class CurrencyListViewModel @Inject constructor(
     }
 
     fun onUserClearData() {
+        searchJob?.cancel()
         viewModelScope.launch {
             repository.clearData()
         }
         // reset currency info list
-        _uiState.update { it.copy(currencyInfoList = emptyList()) }
+        _uiState.update {
+            it.copy(
+                currencyInfoList = emptyList(),
+                isLoading = false,
+            )
+        }
     }
 
     fun onFilterTypeChange(filterType: FilterType) {
@@ -62,12 +68,18 @@ class CurrencyListViewModel @Inject constructor(
         val searchStartTimestamp = System.currentTimeMillis()
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
             val currencyType = convertCurrencyType(_uiState.value.selectedFilterType)
             val resultList = repository.searchCurrency(_userInput.value, currencyType)
                 .map { currencyData -> currencyData.toCurrencyInfo() }
 
             Timber.d("search start timestamp: $searchStartTimestamp")
-            _uiState.update { it.copy(currencyInfoList = resultList) }
+            _uiState.update {
+                it.copy(
+                    currencyInfoList = resultList,
+                    isLoading = false,
+                )
+            }
         }
     }
 

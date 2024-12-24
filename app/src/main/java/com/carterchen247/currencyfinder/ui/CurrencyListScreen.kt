@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -69,7 +70,10 @@ fun CurrencyListScreen(
                 modifier = Modifier.imePadding()
             ) {
                 ButtonRow(onUserClick, uiState.filterTypes, uiState.selectedFilterType)
-                CurrencyListView(uiState.currencyInfoList)
+                Box {
+                    CurrencyListView(uiState.currencyInfoList)
+                    LoadingLayout(uiState.isLoading)
+                }
             }
         }
     }
@@ -320,5 +324,34 @@ fun CurrencyListScreenPreview() {
             onSearchCancel = {},
             onUserClick = {},
         )
+    }
+}
+
+@Composable
+fun LoadingLayout(loading: Boolean) {
+    if (loading) {
+        Surface {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.TopCenter,
+            ) {
+                Row(
+                    modifier = Modifier.height(72.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = "Loading...")
+                }
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoadingLayoutPreview() {
+    CurrencyfinderTheme {
+        LoadingLayout(true)
     }
 }
