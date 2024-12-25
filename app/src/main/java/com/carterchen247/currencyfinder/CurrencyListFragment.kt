@@ -22,8 +22,9 @@ class CurrencyListFragment : Fragment() {
     private val viewModel: CurrencyListViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return ComposeView(requireContext()).apply {
-            setContent {
+        return inflater.inflate(R.layout.fragment_currency_list, container, false).apply {
+            val composeView = findViewById<ComposeView>(R.id.compose_view)
+            composeView.setContent {
                 CurrencyfinderTheme {
                     val uiState by viewModel.uiState.collectAsState()
                     val userInput by viewModel.userInput.collectAsState()

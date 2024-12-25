@@ -12,12 +12,5 @@ class DemoActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_demo)
-
-        // Add fragment only on initial creation
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, CurrencyListFragment())
-                .commit()
-        }
     }
 }
