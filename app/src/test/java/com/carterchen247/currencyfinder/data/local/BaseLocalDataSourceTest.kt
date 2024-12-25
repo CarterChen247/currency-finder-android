@@ -8,13 +8,15 @@ import org.junit.Assert.assertArrayEquals
 import org.junit.Before
 import org.junit.Test
 
-class LocalDataSourceTest {
+abstract class BaseLocalDataSourceTest {
 
     private lateinit var localDataSource: LocalDataSource
 
+    abstract fun provideLocalDataSource(): LocalDataSource
+
     @Before
-    fun setUp() {
-        localDataSource = InMemoryDataSourceImpl()
+    open fun setUp() {
+        localDataSource = provideLocalDataSource()
     }
 
     @Test
