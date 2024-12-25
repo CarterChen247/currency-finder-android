@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,8 +21,12 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,10 +35,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,11 +61,13 @@ fun CurrencyListScreen(
 ) {
     Scaffold(
         topBar = {
-            SearchBar(
-                userInput = userInput,
-                onUserInputChange = { onUserInputChange(it) },
-                onSearchCancel = { onSearchCancel() },
-            )
+            Box(modifier = Modifier.padding(8.dp)) {
+                SearchBar(
+                    userInput = userInput,
+                    onUserInputChange = { onUserInputChange(it) },
+                    onSearchCancel = { onSearchCancel() },
+                )
+            }
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -70,6 +77,7 @@ fun CurrencyListScreen(
                 modifier = Modifier.imePadding()
             ) {
                 ButtonRow(onUserClick, uiState.filterTypes, uiState.selectedFilterType)
+                Spacer(modifier = Modifier.height(8.dp))
                 Box {
                     CurrencyListView(uiState.currencyInfoList)
                     LoadingLayout(uiState.isLoading)
@@ -88,7 +96,7 @@ private fun ButtonRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -221,8 +229,7 @@ private fun ActionButton(
     Button(
         onClick = { onClick() },
         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
-        modifier = Modifier.height(40.dp),
-        shape = RoundedCornerShape(8.dp),
+        shape = MaterialTheme.shapes.small,
     ) {
         Text(text = label)
     }
@@ -236,13 +243,14 @@ private fun SearchFilter(
     onSelected: () -> Unit,
 ) {
     FilterChip(
-        modifier = Modifier.height(40.dp),
         selected = selected,
         label = { Text(text = label) },
         onClick = { onSelected() },
+        shape = MaterialTheme.shapes.small
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SearchBar(
     userInput: String,
@@ -255,24 +263,36 @@ private fun SearchBar(
             .windowInsetsPadding(WindowInsets.statusBars),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             TextField(
                 value = userInput,
                 onValueChange = onUserInputChange,
-                modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(50),
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
+                placeholder = { Text(text = "Search") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = "",
+                    )
+                },
                 trailingIcon = {
-                    IconButton(
-                        modifier = Modifier.aspectRatio(1f),
-                        onClick = { onSearchCancel() },
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.img_close),
-                            contentDescription = ""
-                        )
+                    if (userInput.isNotEmpty()) {
+                        IconButton(
+                            onClick = { onSearchCancel() },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "",
+                            )
+                        }
                     }
                 }
             )
