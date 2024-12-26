@@ -33,12 +33,12 @@ class CurrencyListViewModel @Inject constructor(
 
     fun onUserInputChange(input: String) {
         _userInput.value = input
-        updateSearchResult()
+        requestCurrencyList()
     }
 
     fun onSearchCancel() {
         _userInput.value = ""
-        updateSearchResult()
+        requestCurrencyList()
     }
 
     fun onUserInsertData() {
@@ -47,7 +47,7 @@ class CurrencyListViewModel @Inject constructor(
                 withContext(Dispatchers.IO) {
                     repository.loadData()
                 }
-                updateSearchResult()
+                requestCurrencyList()
             } catch (e: Exception) {
                 Timber.e(e, "load data failed.")
             }
@@ -76,10 +76,10 @@ class CurrencyListViewModel @Inject constructor(
 
     fun onFilterTypeChange(filterType: FilterType) {
         _uiState.update { it.copy(selectedFilterType = filterType) }
-        updateSearchResult()
+        requestCurrencyList()
     }
 
-    private fun updateSearchResult() {
+    fun requestCurrencyList() {
         val searchStartTimestamp = System.currentTimeMillis()
         searchJob?.cancel()
         searchJob = viewModelScope.launch {

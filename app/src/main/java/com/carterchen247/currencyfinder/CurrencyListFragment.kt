@@ -61,4 +61,9 @@ class CurrencyListFragment : Fragment() {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.requestCurrencyList()
+    }
 }
