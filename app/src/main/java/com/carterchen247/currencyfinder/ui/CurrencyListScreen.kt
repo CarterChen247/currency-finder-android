@@ -2,6 +2,7 @@ package com.carterchen247.currencyfinder.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -61,6 +62,7 @@ fun CurrencyListScreen(
     onUserInputChange: (String) -> Unit,
     onSearchCancel: () -> Unit,
     onUserClick: (UserAction) -> Unit,
+    onClickItem: (CurrencyInfo) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -82,7 +84,9 @@ fun CurrencyListScreen(
                 ButtonRow(onUserClick, uiState.filterTypes, uiState.selectedFilterType)
                 Spacer(modifier = Modifier.height(8.dp))
                 Box {
-                    CurrencyListView(uiState.currencyInfoList)
+                    CurrencyListView(uiState.currencyInfoList) { currencyInfo ->
+                        onClickItem(currencyInfo)
+                    }
                     LoadingLayout(uiState.isLoading)
                 }
             }
@@ -120,7 +124,10 @@ private fun ButtonRow(
 }
 
 @Composable
-private fun CurrencyListView(currencyInfoList: List<CurrencyInfo>) {
+private fun CurrencyListView(
+    currencyInfoList: List<CurrencyInfo>,
+    onClickItem: (CurrencyInfo) -> Unit = {},
+) {
     if (currencyInfoList.isEmpty()) {
         // Empty state
         Surface {
@@ -135,7 +142,9 @@ private fun CurrencyListView(currencyInfoList: List<CurrencyInfo>) {
         LazyColumn {
             currencyInfoList.map { currencyInfo ->
                 item {
-                    CurrencyItem(currencyInfo)
+                    CurrencyItem(currencyInfo) {
+                        onClickItem(currencyInfo)
+                    }
                 }
             }
         }
@@ -160,15 +169,19 @@ fun CurrencyListViewPreviewNormalState() {
 fun CurrencyListViewPreviewEmptyState() {
     CurrencyfinderTheme {
         CurrencyListView(
-            currencyInfoList = listOf()
+            currencyInfoList = listOf(),
         )
     }
 }
 
 
 @Composable
-fun CurrencyItem(currencyInfo: CurrencyInfo) {
-    Surface(modifier = Modifier.height(72.dp)) {
+fun CurrencyItem(currencyInfo: CurrencyInfo, onClick: () -> Unit = {}) {
+    Surface(
+        modifier = Modifier
+            .height(72.dp)
+            .clickable(onClick = onClick),
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -326,6 +339,7 @@ fun CurrencyListScreenPreview() {
             onUserInputChange = {},
             onSearchCancel = {},
             onUserClick = {},
+            onClickItem = {},
         )
     }
 }
