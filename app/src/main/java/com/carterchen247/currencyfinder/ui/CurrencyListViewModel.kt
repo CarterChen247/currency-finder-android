@@ -9,7 +9,9 @@ import com.carterchen247.currencyfinder.ui.model.toCurrencyInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,6 +28,9 @@ class CurrencyListViewModel @Inject constructor(
 
     private val _userInput = MutableStateFlow("")
     val userInput = _userInput.asStateFlow()
+
+    private val _errorEvent = MutableSharedFlow<Throwable>()
+    val errorEvent = _errorEvent.asSharedFlow()
 
     private var searchJob: Job? = null
 
@@ -94,6 +99,7 @@ class CurrencyListViewModel @Inject constructor(
             } catch (e: Exception) {
                 ensureActive()
                 Timber.e(e, "updateSearchResult failed.")
+                _errorEvent.emit(e)
                 _uiState.update { it.copy(isLoading = false) }
             }
         }
