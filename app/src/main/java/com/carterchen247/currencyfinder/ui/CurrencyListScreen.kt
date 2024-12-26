@@ -46,9 +46,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.carterchen247.currencyfinder.R
+import com.carterchen247.currencyfinder.model.CurrencyData
+import com.carterchen247.currencyfinder.model.CurrencyType
 import com.carterchen247.currencyfinder.ui.model.CurrencyInfo
 import com.carterchen247.currencyfinder.ui.model.FilterType
 import com.carterchen247.currencyfinder.ui.model.UserAction
+import com.carterchen247.currencyfinder.ui.model.toCurrencyInfo
 import com.carterchen247.currencyfinder.ui.theme.CurrencyfinderTheme
 
 @Composable
@@ -145,16 +148,8 @@ fun CurrencyListViewPreviewNormalState() {
     CurrencyfinderTheme {
         CurrencyListView(
             currencyInfoList = listOf(
-                CurrencyInfo(
-                    avatarCode = "C",
-                    name = "Crypto.com Chain",
-                    displayCode = "CRO",
-                ),
-                CurrencyInfo(
-                    avatarCode = "C",
-                    name = "Crypto.com Chain",
-                    displayCode = "CRO",
-                )
+                previewCurrencyInfo,
+                previewCurrencyInfo,
             )
         )
     }
@@ -213,11 +208,7 @@ fun CurrencyItem(currencyInfo: CurrencyInfo) {
 fun CurrencyItemPreview() {
     CurrencyfinderTheme {
         CurrencyItem(
-            currencyInfo = CurrencyInfo(
-                avatarCode = "C",
-                name = "Crypto.com Chain",
-                displayCode = "CRO",
-            )
+            currencyInfo = previewCurrencyInfo,
         )
     }
 }
@@ -327,16 +318,8 @@ fun CurrencyListScreenPreview() {
         CurrencyListScreen(
             uiState = CurrencyListUiState().copy(
                 currencyInfoList = listOf(
-                    CurrencyInfo(
-                        avatarCode = "C",
-                        name = "Crypto.com Chain",
-                        displayCode = "CRO",
-                    ),
-                    CurrencyInfo(
-                        avatarCode = "C",
-                        name = "Crypto.com Chain",
-                        displayCode = "CRO",
-                    )
+                    previewCurrencyInfo,
+                    previewCurrencyInfo,
                 )
             ),
             userInput = "123",
@@ -375,3 +358,10 @@ fun LoadingLayoutPreview() {
         LoadingLayout(true)
     }
 }
+
+private val previewCurrencyInfo = CurrencyData(
+    id = "CRO",
+    name = "Crypto.com Chain",
+    symbol = "CRO",
+    type = CurrencyType.CRYPTO,
+).toCurrencyInfo()

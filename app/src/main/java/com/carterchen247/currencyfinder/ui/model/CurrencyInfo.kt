@@ -4,6 +4,7 @@ import com.carterchen247.currencyfinder.model.CurrencyData
 import com.carterchen247.currencyfinder.model.CurrencyType
 
 data class CurrencyInfo(
+    val id: String,
     val avatarCode: String,
     val name: String,
     val displayCode: String,
@@ -19,6 +20,7 @@ fun CurrencyData.toCurrencyInfo(): CurrencyInfo {
         else -> ""
     }
     return CurrencyInfo(
+        id = id,
         avatarCode = avatarCode,
         name = name,
         displayCode = displayCode,

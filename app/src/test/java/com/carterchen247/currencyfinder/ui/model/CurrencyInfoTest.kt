@@ -17,6 +17,7 @@ class CurrencyInfoTest {
         )
         assertEquals(
             CurrencyInfo(
+                id = "CRO",
                 avatarCode = "C",
                 name = "Crypto.com Chain",
                 displayCode = "CRO",
@@ -36,6 +37,7 @@ class CurrencyInfoTest {
         )
         assertEquals(
             CurrencyInfo(
+                id = "GBP",
                 avatarCode = "G",
                 name = "British Pound",
                 displayCode = "GBP",
