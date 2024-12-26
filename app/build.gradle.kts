@@ -90,4 +90,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     testImplementation(libs.robolectric)
+    testImplementation(libs.kotlinx.coroutines.test)
 }

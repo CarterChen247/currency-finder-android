@@ -3,7 +3,7 @@ package com.carterchen247.currencyfinder.data.local
 import com.carterchen247.currencyfinder.model.CurrencyType
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertArrayEquals
 import org.junit.Before
 import org.junit.Test
@@ -20,13 +20,13 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `result will be empty before load data`() = runBlocking {
+    fun `result will be empty before load data`() = runTest {
         val result = localDataSource.searchCurrency("")
         assertTrue(result.isEmpty())
     }
 
     @Test
-    fun `result will be not empty after load data`() = runBlocking {
+    fun `result will be not empty after load data`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("")
         assertTrue(result.isNotEmpty())
@@ -39,7 +39,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `result type will be all CRYPTO if query type == CRYPTO`() = runBlocking {
+    fun `result type will be all CRYPTO if query type == CRYPTO`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("", CurrencyType.CRYPTO)
         assertTrue(result.isNotEmpty())
@@ -47,7 +47,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `result type will be all FIAT if query type == FIAT`() = runBlocking {
+    fun `result type will be all FIAT if query type == FIAT`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("", CurrencyType.FIAT)
         assertTrue(result.isNotEmpty())
@@ -55,14 +55,14 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `result will be empty if query space ' '`() = runBlocking {
+    fun `result will be empty if query space ' '`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency(" ")
         assertTrue(result.isEmpty())
     }
 
     @Test
-    fun `result will be empty after clear data`() = runBlocking {
+    fun `result will be empty after clear data`() = runTest {
         localDataSource.loadData()
         localDataSource.clearData()
         val result = localDataSource.searchCurrency("")
@@ -70,7 +70,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data which name start with 'Ethereum'`() = runBlocking {
+    fun `query data which name start with 'Ethereum'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("Ethereum")
         assertEquals(2, result.size)
@@ -84,7 +84,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data which name partial match 'Classic'`() = runBlocking {
+    fun `query data which name partial match 'Classic'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("Classic")
         assertEquals(1, result.size)
@@ -97,7 +97,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data which name partial match 'Coin'`() = runBlocking {
+    fun `query data which name partial match 'Coin'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("Coin")
         assertEquals(2, result.size)
@@ -111,7 +111,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data which name partial match 'Dollar'`() = runBlocking {
+    fun `query data which name partial match 'Dollar'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("Dollar")
         assertEquals(4, result.size)
@@ -127,7 +127,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data which name match 'Chain'`() = runBlocking {
+    fun `query data which name match 'Chain'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("Chain")
         assertEquals(2, result.size)
@@ -141,7 +141,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data which symbol start with '$'`() = runBlocking {
+    fun `query data which symbol start with '$'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("$")
         assertEquals(4, result.size)
@@ -157,7 +157,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data which symbol start with '$' and type == CRYPTO`() = runBlocking {
+    fun `query data which symbol start with '$' and type == CRYPTO`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("$", CurrencyType.CRYPTO)
         assertEquals(0, result.size)
@@ -165,7 +165,7 @@ abstract class BaseLocalDataSourceTest {
 
 
     @Test
-    fun `query data which symbol start with 'ET'`() = runBlocking {
+    fun `query data which symbol start with 'ET'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("ET")
         assertEquals(2, result.size)
@@ -179,7 +179,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data with 'USD'`() = runBlocking {
+    fun `query data with 'USD'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("USD")
         assertEquals(1, result.size)
@@ -189,14 +189,14 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `cannot query data with code field`() = runBlocking {
+    fun `cannot query data with code field`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("SGD", CurrencyType.FIAT)
         assertEquals(0, result.size)
     }
 
     @Test
-    fun `query data with 'b'`() = runBlocking {
+    fun `query data with 'b'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("b")
         assertEquals(4, result.size)
@@ -212,7 +212,7 @@ abstract class BaseLocalDataSourceTest {
     }
 
     @Test
-    fun `query data with 'be'`() = runBlocking {
+    fun `query data with 'be'`() = runTest {
         localDataSource.loadData()
         val result = localDataSource.searchCurrency("be")
         assertEquals(0, result.size)
