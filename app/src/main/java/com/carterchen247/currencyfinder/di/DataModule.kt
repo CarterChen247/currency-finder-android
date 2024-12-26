@@ -5,6 +5,7 @@ import com.carterchen247.currencyfinder.data.RepositoryImpl
 import com.carterchen247.currencyfinder.data.local.LocalDataSource
 import com.carterchen247.currencyfinder.data.local.LocalDataSourceImpl
 import com.carterchen247.currencyfinder.data.local.db.AppDatabase
+import com.carterchen247.currencyfinder.util.dispatcher.DispatcherProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,8 +18,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideRepository(localDataSource: LocalDataSource): Repository {
-        return RepositoryImpl(localDataSource)
+    fun provideRepository(localDataSource: LocalDataSource, dispatcherProvider: DispatcherProvider): Repository {
+        return RepositoryImpl(localDataSource, dispatcherProvider)
     }
 
     @Singleton

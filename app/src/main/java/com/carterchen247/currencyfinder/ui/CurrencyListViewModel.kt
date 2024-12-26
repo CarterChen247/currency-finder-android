@@ -7,14 +7,12 @@ import com.carterchen247.currencyfinder.model.CurrencyType
 import com.carterchen247.currencyfinder.ui.model.FilterType
 import com.carterchen247.currencyfinder.ui.model.toCurrencyInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -44,9 +42,7 @@ class CurrencyListViewModel @Inject constructor(
     fun onUserInsertData() {
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) {
-                    repository.loadData()
-                }
+                repository.loadData()
                 requestCurrencyList()
             } catch (e: Exception) {
                 Timber.e(e, "load data failed.")
@@ -58,9 +54,7 @@ class CurrencyListViewModel @Inject constructor(
         searchJob?.cancel()
         viewModelScope.launch {
             try {
-                withContext(Dispatchers.IO) {
-                    repository.clearData()
-                }
+                repository.clearData()
             } catch (e: Exception) {
                 Timber.e(e, "clear data failed.")
             }
@@ -86,10 +80,8 @@ class CurrencyListViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
             try {
                 val currencyType = convertCurrencyType(_uiState.value.selectedFilterType)
-                val resultList = withContext(Dispatchers.IO) {
-                    repository.searchCurrency(_userInput.value, currencyType)
-                        .map { currencyData -> currencyData.toCurrencyInfo() }
-                }
+                val resultList = repository.searchCurrency(_userInput.value, currencyType)
+                    .map { currencyData -> currencyData.toCurrencyInfo() }
 
                 Timber.d("search start timestamp: $searchStartTimestamp")
 
