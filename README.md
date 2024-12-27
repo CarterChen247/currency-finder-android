@@ -31,7 +31,7 @@ This project is not just about delivering features but about demonstrating a wel
 <img width=250 src="https://github.com/user-attachments/assets/cd2bde2f-0872-4548-94f3-d22c6f7304e2"/>
 
 - **UI (e.g., buttons, search feature, empty state)**: See [UI Design (#2)](https://github.com/CarterChen247/currency-finder-android/issues/2) for detailed information.
-- **Search term matching rules**: See `CurrencyFilterTest` for detailed test cases and coverage.
+- **Search term matching rules**: See [CurrencyFilterTest](https://github.com/CarterChen247/currency-finder-android/blob/710040ef4ac7cfd7e3d1fde225ce18316b7a3322/app/src/test/java/com/carterchen247/currencyfinder/util/CurrencyFilterTest.kt) for detailed test cases and coverage.
 - ✅ **Background Operations**:
   - All operations are performed off the UI thread.
   - Implemented in `RepositoryImpl` using `Dispatchers.IO`.
