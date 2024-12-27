@@ -2,9 +2,7 @@ package com.carterchen247.currencyfinder.data.local.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.carterchen247.currencyfinder.data.local.model.CurrencyDataModel
 import com.carterchen247.currencyfinder.model.CurrencyData
-import com.carterchen247.currencyfinder.model.CurrencyType
 
 @Entity
 data class CurrencyDataEntity(
@@ -24,10 +22,10 @@ fun CurrencyDataEntity.toCurrencyData() = CurrencyData(
     type = CurrencyTypeStringConverter.toCurrencyType(type),
 )
 
-fun CurrencyDataModel.toCurrencyDataEntity(currencyType: CurrencyType) = CurrencyDataEntity(
+fun CurrencyData.toCurrencyDataEntity() = CurrencyDataEntity(
     currencyId = id,
     name = name,
     symbol = symbol,
-    code = code.orEmpty(),
-    type = CurrencyTypeStringConverter.toString(currencyType),
+    code = code,
+    type = CurrencyTypeStringConverter.toString(type),
 )

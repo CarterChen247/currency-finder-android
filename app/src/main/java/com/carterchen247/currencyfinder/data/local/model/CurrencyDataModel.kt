@@ -1,6 +1,6 @@
 package com.carterchen247.currencyfinder.data.local.model
 
-class CurrencyDataModel(
+data class CurrencyDataModel(
     val id: String,
     val name: String,
     val symbol: String,

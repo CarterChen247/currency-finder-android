@@ -6,6 +6,7 @@ import com.carterchen247.currencyfinder.data.local.LocalDataSource
 import com.carterchen247.currencyfinder.data.local.LocalDataSourceImpl
 import com.carterchen247.currencyfinder.data.local.db.AppDatabase
 import com.carterchen247.currencyfinder.util.dispatcher.DispatcherProvider
+import com.carterchen247.currencyfinder.util.resource.CurrencyResourceProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,7 +25,10 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideLocalDataSource(appDatabase: AppDatabase): LocalDataSource {
-        return LocalDataSourceImpl(appDatabase.currencyDataDao())
+    fun provideLocalDataSource(
+        appDatabase: AppDatabase,
+        currencyResourceProvider: CurrencyResourceProvider,
+    ): LocalDataSource {
+        return LocalDataSourceImpl(appDatabase.currencyDataDao(), currencyResourceProvider)
     }
 }

@@ -3,6 +3,8 @@ package com.carterchen247.currencyfinder.data.local
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import com.carterchen247.currencyfinder.data.local.db.AppDatabase
+import com.carterchen247.currencyfinder.util.resource.CurrencyResourceProviderImpl
+import com.google.gson.Gson
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -22,7 +24,10 @@ class LocalDataSourceImplTest : BaseLocalDataSourceTest() {
         super.setUp()
     }
 
-    override fun provideLocalDataSource() = LocalDataSourceImpl(database.currencyDataDao())
+    override fun provideLocalDataSource(): LocalDataSourceImpl {
+        val resourceProvider = CurrencyResourceProviderImpl(ApplicationProvider.getApplicationContext(), Gson())
+        return LocalDataSourceImpl(database.currencyDataDao(), resourceProvider)
+    }
 
     @After
     fun tearDown() {

@@ -3,32 +3,24 @@ package com.carterchen247.currencyfinder.data.local
 import com.carterchen247.currencyfinder.data.local.db.dao.CurrencyDataDao
 import com.carterchen247.currencyfinder.data.local.db.entity.toCurrencyData
 import com.carterchen247.currencyfinder.data.local.db.entity.toCurrencyDataEntity
-import com.carterchen247.currencyfinder.data.local.model.CurrencyDataModel
 import com.carterchen247.currencyfinder.model.CurrencyData
 import com.carterchen247.currencyfinder.model.CurrencyType
 import com.carterchen247.currencyfinder.util.CurrencyFilter
-import com.google.gson.Gson
+import com.carterchen247.currencyfinder.util.resource.CurrencyResourceProvider
 
 class LocalDataSourceImpl(
-    private val currencyDataDao: CurrencyDataDao
+    private val currencyDataDao: CurrencyDataDao,
+    private val currencyResourceProvider: CurrencyResourceProvider,
 ) : LocalDataSource {
-    private val gson = Gson()
     private val currencyFilter = CurrencyFilter()
 
     override suspend fun loadData() {
         clearData()
 
-        val currencyListCrypto = gson.fromJson(Dataset.CRYPTO, Array<CurrencyDataModel>::class.java)
-            .map { currencyDataModel ->
-                currencyDataModel.toCurrencyDataEntity(CurrencyType.CRYPTO)
-            }
+        val currencyDataset = currencyResourceProvider.getDataset(CurrencyType.CRYPTO) + currencyResourceProvider.getDataset(CurrencyType.FIAT)
+        val currencyDataEntities = currencyDataset.map { it.toCurrencyDataEntity() }
 
-        val currencyListFiat = gson.fromJson(Dataset.FIAT, Array<CurrencyDataModel>::class.java)
-            .map { currencyDataModel ->
-                currencyDataModel.toCurrencyDataEntity(CurrencyType.FIAT)
-            }
-
-        currencyDataDao.insertAll(currencyListCrypto + currencyListFiat)
+        currencyDataDao.insertAll(currencyDataEntities)
     }
 
     override suspend fun searchCurrency(input: String, currencyType: CurrencyType?): List<CurrencyData> {
