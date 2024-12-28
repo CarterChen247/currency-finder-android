@@ -46,6 +46,7 @@ The project emphasizes testing at multiple levels to ensure stability and reliab
 - **MockK**: Used for mocking dependencies.
 - **Robolectric**: For unit tests with Android components.
 - **Integration Tests**: For testing ViewModel, DataSource implementations and more.
+  - I also published a [series of articles about integration testing of ViewModels in 2019](https://medium.com/@kazafchen/android%E4%B8%AD%E7%9A%84%E4%BA%92%E5%8B%95%E6%B8%AC%E8%A9%A6-interaction-testing-in-android-%E5%AE%8C%E7%B5%90%E7%AF%87-mvvm%E6%9E%B6%E6%A7%8B%E4%B8%8B%E7%9A%84%E4%BA%92%E5%8B%95%E6%B8%AC%E8%A9%A6-7fc1ef732849).
 
 ## Architecture Design Journey
 
